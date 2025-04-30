@@ -70,9 +70,10 @@ component sevenseg_decoder is
 	       o_sign  : out STD_LOGIC;
 	       o_hund  : out STD_LOGIC;
 	       o_tens  : out STD_LOGIC;
-	       o_ones  : out STD_LOGIC;
+	       o_ones  : out STD_LOGIC
 	   );
 	end component twos_comp;
+	
 	component TDM4 is
 		generic ( constant k_WIDTH : natural  := 4); -- bits in input and output
         Port ( i_clk		: in  STD_LOGIC;
@@ -85,6 +86,16 @@ component sevenseg_decoder is
                o_sel		: out STD_LOGIC_VECTOR (3 downto 0)	-- selected data line (one-cold)
 	   );
     end component TDM4;
+    
+    component ALU is
+        Port (
+            i_A     : in std_logic_vector (7 downto 0);
+            i_B     : in std_logic_vector (7 downto 0);
+            i_op    : in std_logic_vector (2 downto 0);
+            o_flags : out std_logic_vector(3 downto 0);
+            o_result: out std_logic_vector(7 downto 0)
+        );
+    end component ALU;
     
     component clock_divider is
         generic ( constant k_DIV : natural := 2	); -- How many clk cycles until slow clock toggles
