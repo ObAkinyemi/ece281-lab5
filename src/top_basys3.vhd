@@ -51,6 +51,7 @@ architecture top_basys3_arch of top_basys3 is
             o_seg_n : out STD_LOGIC_VECTOR (6 downto 0)
             );
         end component sevenseg_decoder;
+        
     component controller_fsm is
             port (
             i_reset : in  STD_LOGIC;
@@ -102,12 +103,21 @@ architecture top_basys3_arch of top_basys3 is
  
  
 -- hot singles
- 
- 
+    signal w_data   : std_logic_vector(3 downto 0);
+    signal w_cycle  : std_logic_vector(3 downto 0);
  
 begin
 	-- PORT MAPS ----------------------------------------
- 
+    sevenseg_decoder_mappings : sevenseg_decoder port map (
+        i_Hex => w_data,
+        o_seg_n => seg
+    );
+    
+    controller_fsm_mappings : controller_fsm port map (
+        i_reset => btnU,
+        i_adv => btnC,
+        o_cycle => w_cycle
+    );
 	
 	-- CONCURRENT STATEMENTS ----------------------------
 
