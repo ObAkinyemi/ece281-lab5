@@ -83,6 +83,7 @@ architecture top_basys3_arch of top_basys3 is
                o_sel		: out STD_LOGIC_VECTOR (3 downto 0)	-- selected data line (one-cold)
 	       );
         end component TDM4;
+        
     component clock_divider is
             generic ( constant k_DIV : natural := 2	); -- How many clk cycles until slow clock toggles
                                                    -- Effectively, you divide the clk double this 
@@ -104,12 +105,13 @@ architecture top_basys3_arch of top_basys3 is
  
  
 -- hot singles
-    signal w_data   : std_logic_vector(3 downto 0);
-    signal w_cycle  : std_logic_vector(3 downto 0);
+    signal w_data, w_cycle, w_sel   : std_logic_vector(3 downto 0);
     signal master_reset : std_logic;
     signal w_result, w_i_A, w_i_B : std_logic_vector(7 downto 0);
     signal w_D3, w_D2, w_D1, w_D0 : std_logic_vector(3 downto 0);
     signal w_bin    : std_logic_vector(7 downto 0);
+    signal w_clkdiv_to_tdm    : std_logic;
+    
  
 begin
 	-- PORT MAPS ----------------------------------------
@@ -124,11 +126,23 @@ begin
         o_cycle => w_cycle
     );
     
+    --        need to find solution for o_sign and its mapping in twos_comp_mappings
     twos_comp_mappings : twos_comp port map (
         i_bin => w_result,
         o_hund => w_D2,
         o_tens => w_D1,
         o_ones => w_D0
+    );
+    
+    TDM4_mappings : TDM4 port map (
+        i_clk => w_clkdiv_to_tdm,
+        i_reset => btnU,
+        i_D3 => w_D3,
+        i_D2 => w_D2,
+        i_D1 => w_D1,
+        i_D0 => w_D0,
+        o_data => w_data,
+        o_sel => w_sel
     );
 	
 	-- CONCURRENT STATEMENTS ----------------------------
