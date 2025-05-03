@@ -111,6 +111,7 @@ architecture top_basys3_arch of top_basys3 is
     signal w_D3, w_D2, w_D1, w_D0 : std_logic_vector(3 downto 0);
     signal w_bin    : std_logic_vector(7 downto 0);
     signal w_clkdiv_to_tdm    : std_logic;
+    signal w_opp    : std_logic_vector(2 downto 0);
     
  
 begin
@@ -143,6 +144,14 @@ begin
         i_D0 => w_D0,
         o_data => w_data,
         o_sel => w_sel
+    );
+    
+    ALU_mappings : ALU port map (
+        i_A => w_i_A,
+        i_B => w_i_B,
+        i_op => w_opp,
+        o_result => w_result,
+        o_flags => w_flags
     );
     
 --    dont know if k_DIV is the correct number
