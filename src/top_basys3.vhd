@@ -144,7 +144,16 @@ begin
         o_data => w_data,
         o_sel => w_sel
     );
-	
+    
+--    dont know if k_DIV is the correct number
+	clkdiv_inst : clock_divider 		--instantiation of clock_divider to take 
+        generic map ( k_DIV => 50000000 ) -- 1 Hz clock from 100 MHz
+        port map (					    	  
+            i_clk   => clk,
+            i_reset => master_reset,
+            o_clk => w_clkdiv_to_tdm
+    );
+    
 	-- CONCURRENT STATEMENTS ----------------------------
     master_reset <= btnL or btnU;
     led(3 downto 0) <= w_cycle;
