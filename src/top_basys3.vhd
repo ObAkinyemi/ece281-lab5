@@ -32,6 +32,7 @@ entity top_basys3 is
         sw      :   in std_logic_vector(7 downto 0); -- operands and opcode
         btnU    :   in std_logic; -- reset
         btnC    :   in std_logic; -- fsm cycle
+        btnL    :   in std_logic; -- master reset
         -- outputs
         led :   out std_logic_vector(15 downto 0);
         -- 7-segment display segments (active-low cathodes)
@@ -105,6 +106,9 @@ architecture top_basys3_arch of top_basys3 is
 -- hot singles
     signal w_data   : std_logic_vector(3 downto 0);
     signal w_cycle  : std_logic_vector(3 downto 0);
+    signal master_reset : std_logic;
+    signal w_result : std_logic_vector(7 downto 0);
+    signal w_D3, w_D2, w_D1, w_D0 : std_logic_vector(3 downto 0);
  
 begin
 	-- PORT MAPS ----------------------------------------
@@ -118,7 +122,15 @@ begin
         i_adv => btnC,
         o_cycle => w_cycle
     );
+    
+    twos_comp_mappings : twos_comp port map (
+        i_bin => w_result,
+        o_hund => w_D2,
+        o_tens => w_D1,
+        o_ones => w_D0
+    );
 	
 	-- CONCURRENT STATEMENTS ----------------------------
-
+    master_reset <= btnL or btnU;
+    led(3 downto 0) <= w_cycle;
 end top_basys3_arch;
