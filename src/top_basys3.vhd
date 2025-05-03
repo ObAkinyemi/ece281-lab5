@@ -107,8 +107,9 @@ architecture top_basys3_arch of top_basys3 is
     signal w_data   : std_logic_vector(3 downto 0);
     signal w_cycle  : std_logic_vector(3 downto 0);
     signal master_reset : std_logic;
-    signal w_result : std_logic_vector(7 downto 0);
+    signal w_result, w_i_A, w_i_B : std_logic_vector(7 downto 0);
     signal w_D3, w_D2, w_D1, w_D0 : std_logic_vector(3 downto 0);
+    signal w_bin    : std_logic_vector(7 downto 0);
  
 begin
 	-- PORT MAPS ----------------------------------------
@@ -133,4 +134,11 @@ begin
 	-- CONCURRENT STATEMENTS ----------------------------
     master_reset <= btnL or btnU;
     led(3 downto 0) <= w_cycle;
+    
+--    mux logic
+    with w_cycle select
+        w_bin <= w_i_A when "0010",
+                 w_i_B when "0100",
+                 w_result when "1000",
+                 "0001" when others;
 end top_basys3_arch;
