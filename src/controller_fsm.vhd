@@ -38,8 +38,19 @@ entity controller_fsm is
 end controller_fsm;
 
 architecture FSM of controller_fsm is
+    
+    type sm_state is (clear, operand1, operand2, result);
+    
+    signal current_state, next_state: sm_state;
 
 begin
 
+--concurrent statements
+    
+--next state logic
+
+--output logic
+
+--state register
 
 end FSM;

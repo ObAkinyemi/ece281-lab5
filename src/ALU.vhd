@@ -49,30 +49,27 @@ signal w_opp : std_logic_vector(2 downto 0);
 begin
     ALU_process : process(w_flags, i_op, i_A, i_B)
         if i_op = "000" then
-         w_result <= std_logic_vector(signed(i_A) + signed(i_B));
-        if i_op = "001" then
-         w_result <= std_logic_vector(signed(i_A) - signed(i_B));
-        
-        if i_op = "010" then
-        o_result <= i_A and i_B;
-         
-        if i_op = "011" then
+            w_result <= std_logic_vector(signed(i_A) + signed(i_B));
+        elsif i_op = "001" then
+            w_result <= std_logic_vector(signed(i_A) - signed(i_B));
+        elsif i_op = "010" then
+            o_result <= i_A and i_B;
+        elsif i_op = "011" then
          o_result <= i_A or i_B;
-        
--- concurrent statments
+        end if;
  
 
         variable result : resize(unsigned(i_A), 9) + resize(unsigned(i_B), 9);
         begin
             if (result(7) = '1') then
                 w_flags(3) = '1'; --Negative flag
-            
+            end if;  
             if (result = "000000000") then
                 w_flags(2) = '1'; --Zero Flag
-            
+            end if;
             if (result(8) = '1' and w_op(1) = '1') then
                 w_flags(1) = '1'; -- Carry flag
-            
+            end if;
             
             if ( AND(w_op(1),XOR(result(7),i_A(7)),XNOR(w_op(0),i_A(7),i_B(7)) )  ) then
                 w_flags(0) = '1';
