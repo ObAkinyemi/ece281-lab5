@@ -47,22 +47,21 @@ signal w_opp : std_logic_vector(2 downto 0);
 
 
 begin
-    
-    if i_op="000" then
-     w_result <= std_logic_vector(signed(i_A) + signed(i_B));
-    if i_op "001" then
-     w_result <= std_logic_vector(signed(i_A) - signed(i_B));
-    
-    if i_op "010" then
-    o_result <= i_A and i_B;
-     
-    if i_op  "011" then
-     o_result <= i_A or i_B;
+    ALU_process : process(w_flags, i_op, i_A, i_B)
+        if i_op = "000" then
+         w_result <= std_logic_vector(signed(i_A) + signed(i_B));
+        if i_op = "001" then
+         w_result <= std_logic_vector(signed(i_A) - signed(i_B));
+        
+        if i_op = "010" then
+        o_result <= i_A and i_B;
+         
+        if i_op = "011" then
+         o_result <= i_A or i_B;
         
 -- concurrent statments
  
-    
-    flag_logic : process(w_flags, i_op, i_A, i_B)
+
         variable result : resize(unsigned(i_A), 9) + resize(unsigned(i_B), 9);
         begin
             if (result(7) = '1') then
@@ -79,7 +78,7 @@ begin
                 w_flags(0) = '1';
                 
         end if;
-    end process flag_logic;
+    end process ALU_process;
     
     
 
