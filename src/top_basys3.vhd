@@ -112,6 +112,8 @@ architecture top_basys3_arch of top_basys3 is
     signal w_bin    : std_logic_vector(7 downto 0);
     signal w_clkdiv_to_tdm    : std_logic;
     signal w_opp    : std_logic_vector(2 downto 0);
+    signal w_sign : std_logic;
+
     
  
 begin
@@ -130,6 +132,7 @@ begin
     --        need to find solution for o_sign and its mapping in twos_comp_mappings
     twos_comp_mappings : twos_comp port map (
         i_bin => w_result,
+        o_sign => w_sign,
         o_hund => w_D2,
         o_tens => w_D1,
         o_ones => w_D0
@@ -168,10 +171,23 @@ begin
     led(3 downto 0) <= w_cycle;
     led(15 downto 12) <= w_flags;
     
+    with w_cycle select
+    w_i_A <= sw when "0001", w_i_A when others;
+
+    with w_cycle select
+        w_i_B <= sw when "0010", w_i_B when others;
+    
+    with w_cycle select
+        w_opp <= sw(2 downto 0) when "0100", w_opp when others;
+    
+    
 --    mux logic not working
---    with w_cycle select
---        w_bin <= w_i_A when "0010",
---                 w_i_B when "0100",
---                 w_result when "1000",
---                 "0001" when others;
+    with w_cycle select
+    w_bin <= w_i_A    when "0001",  -- state A
+             w_i_B    when "0010",  -- state B
+             w_result when "1000",  -- state RESULT
+             (others => '0') when others;
+    
+    w_D3 <= "1010" when w_sign = '1' else "0000";  -- dash or blank
+
 end top_basys3_arch;
